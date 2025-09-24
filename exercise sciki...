@@ -1,0 +1,38 @@
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score, classification_report
+
+# 1. Cargar dataset Iris
+iris = load_iris()
+X = iris.data       # Características: largo y ancho de pétalos y sépalos
+y = iris.target     # Etiquetas: tipo de flor (Setosa, Versicolor, Virginica)
+
+# 2. Dividir en entrenamiento (70%) y prueba (30%)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42
+)
+
+# 3. Crear y entrenar modelo (K-Nearest Neighbors)
+modelo = KNeighborsClassifier(n_neighbors=3)
+modelo.fit(X_train, y_train)
+
+# 4. Hacer predicciones
+y_pred = modelo.predict(X_test)
+
+# 5. Evaluar modelo
+print("Precisión del modelo:", accuracy_score(y_test, y_pred))
+print("\nReporte de clasificación:\n", classification_report(y_test, y_pred, target_names=iris.target_names))
+
+# 6. Pedir al usuario datos de una nueva flor
+print("\n--- Clasificación de una nueva flor ---")
+sepalo_largo = float(input("Ingrese el largo del sépalo (cm): "))
+sepalo_ancho = float(input("Ingrese el ancho del sépalo (cm): "))
+petalo_largo = float(input("Ingrese el largo del pétalo (cm): "))
+petalo_ancho = float(input("Ingrese el ancho del pétalo (cm): "))
+
+nueva_flor = [[sepalo_largo, sepalo_ancho, petalo_largo, petalo_ancho]]
+
+# 7. Predicción con datos del usuario
+prediccion = modelo.predict(nueva_flor)
+print("\nLa flor ingresada se clasifica como:", iris.target_names[prediccion[0]])
